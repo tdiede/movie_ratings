@@ -104,7 +104,7 @@ def set_val_user_id():
 
     # Set the value for the next user_id to be max_id + 1
     query = "SELECT setval('users_user_id_seq', :new_id)"
-    db.session.execute(query, {'new_id': max_id + 1})
+    db.session.execute(query, {'new_id': max_id})
     db.session.commit()
 
 
@@ -117,7 +117,7 @@ def set_val_movie_id():
 
     # Set the value for the next movie_id to be max_id + 1
     query = "SELECT setval('movies_movie_id_seq', :new_id)"
-    db.session.execute(query, {'new_id': max_id + 1})
+    db.session.execute(query, {'new_id': max_id})
     db.session.commit()
 
 
@@ -130,7 +130,7 @@ def set_val_rating_id():
 
     # Set the value for the next rating_id to be max_id + 1
     query = "SELECT setval('ratings_rating_id_seq', :new_id)"
-    db.session.execute(query, {'new_id': max_id + 1})
+    db.session.execute(query, {'new_id': max_id})
     db.session.commit()
 
 

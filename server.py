@@ -31,7 +31,27 @@ def user_list():
     """Show list of users."""
 
     users = User.query.all()
+
     return render_template("user_list.html", users=users)
+
+@app.route('/users/<int:user_id>')
+def user_profile(user_id):
+    """Show user profile."""
+
+    user_ratings = {}
+    user_title_score = []
+
+    user = User.query.get(user_id)
+    ratings = user.ratings
+    for rating in ratings:
+        title = rating.movie.title
+        user_ratings[title] = rating.score
+    for title in sorted(user_ratings.keys()):
+        title_score = (title, user_ratings[title])
+        user_title_score.append(title_score)
+
+    # movie_information.html
+    return render_template("user_information.html", user=user, user_title_score=user_title_score)
 
 
 @app.route('/register', methods=['GET'])
@@ -48,22 +68,24 @@ def register_process():
     email_form_input = request.form['email']
     password_form_input = request.form['password']
 
-    db_email_query = User.query.filter(User.email == email_form_input)
+    db_query_by_email = User.query.filter(User.email == email_form_input)
     
     # New user. Needs to register. Automatically registers.
-    if db_email_query.first() == None:
+    if db_query_by_email.first() == None:
         new_user_email = User(email=email_form_input, password=password_form_input)
         db.session.add(new_user_email)
         db.session.commit()
         flash('You have now been registered.')
-        return redirect('/')
-    # Returning user. Needs to login and enter homepage.
+        return redirect('/profile')
+    # Handling login. Checking email and password match.
+    elif db_query_by_email.first().email == email_form_input and db_query_by_email.first().password == password_form_input:
+        session['user_login'] = db_query_by_email.first().user_id
+        flash('You are already registered. You are logged in.')
+        return redirect('/profile')
+    # Returning user, incorrect password. Needs to login via login page.
     else:
-        # Handling login.
-        loggedin_user = db_email_query.one()
-        session['user_login'] = loggedin_user.user_id
-        flash('You are already registered. You are logged.')
-        return redirect('/')
+        flash('You are a registered user but your password is incorrect. Please login with the correct password.')
+        return redirect('/login')
 
 
 @app.route('/login', methods=['GET'])
@@ -77,29 +99,28 @@ def login_form():
 def login_process():
     """Registered users can log in."""
 
-    login_email_form = request.form['email']
-    login_password_form = request.form['password']
+    email_form_input = request.form['email']
+    password_form_input = request.form['password']
 
-    db_login_query = User.query.filter(User.email == login_email_form)
+    db_query_by_email = User.query.filter(User.email == email_form_input)
 
-    if db_login_query.first() == None:
+    if db_query_by_email.first() == None:
         flash('You are not a current user. Please create a new account or enter your email again.')
         return redirect('/register')
-    elif db_login_query.one().password != login_password_form:
+    elif db_query_by_email.first().password != password_form_input:
         flash('Incorrect password. Please try again.')
         return redirect('/login')
     else:
-        loggedin_user = db_login_query.one()
-        session['user_login'] = loggedin_user.user_id
+        session['user_login'] = db_query_by_email.first().user_id
         flash('You are now logged in. You are user # %d' % (session['user_login']))
-        return redirect('/')
+        return redirect('/profile')
 
 
 @app.route('/logout', methods=['POST'])
 def logout_process():
     """Registered users can log out."""
 
-    session.clear()
+    del session['user_login']
     flash('You are now logged out.')
     return redirect('/')
 
