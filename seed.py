@@ -58,6 +58,11 @@ def load_movies():
         else:
             released_at = None
 
+        if title =='':
+            continue
+        elif Movie.query.filter_by(title=title).count() == 1:
+            continue
+        
         movie = Movie(movie_id=movie_id,
                     title=title,
                     released_at=released_at,

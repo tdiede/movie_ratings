@@ -34,6 +34,7 @@ def user_list():
 
     return render_template("user_list.html", users=users)
 
+
 @app.route('/users/<int:user_id>')
 def user_profile(user_id):
     """Show user profile."""
@@ -50,8 +51,60 @@ def user_profile(user_id):
         title_score = (title, user_ratings[title])
         user_title_score.append(title_score)
 
-    # movie_information.html
     return render_template("user_information.html", user=user, user_title_score=user_title_score)
+
+
+@app.route('/movies')
+def movie_list():
+    """Show list of movies."""
+
+    list_of_movies = []
+
+    movies = Movie.query.all()
+    for movie in movies:
+        title = movie.title
+        movie_id = movie.movie_id
+        title_movie_id = (title, movie_id)
+        list_of_movies.append(title_movie_id)
+    list_of_movies.sort()    
+
+    return render_template("movie_list.html", list_of_movies=list_of_movies)
+
+
+# Then 
+# If session 'user_login' exists
+#     Form processing route - Set a rating
+#      new rating and the case where this is 
+#      updating an existing rating.
+
+
+@app.route('/movies/<int:movie_id>')
+def movie_details(movie_id):
+
+    list_of_scores = []
+    movie = Movie.query.get(movie_id)
+    ratings = movie.ratings
+    for rating in ratings:
+        score= rating.score
+        list_of_scores.append(score)
+    
+    return render_template("movie_information.html", movie=movie, list_of_scores=list_of_scores)
+
+
+@app.route('/ratemovie/<int:movie_id>')
+def rate_movie(movie_id):
+
+    user_session = session("user_login")
+
+    # if user_session
+    #     return redirect('/ratingform')
+    # else:
+    #     flash('Please login to rate a movie.')
+    #     return redirect('/login')
+
+    raise Exception
+
+    return render_template("register_form.html")
 
 
 @app.route('/register', methods=['GET'])
