@@ -14,29 +14,31 @@ body {
 
 .intro > h3 {
   color: orange;
-  text-shadow: red 1px 1px 3px;
+  text-shadow: tomato 1px 1px 5px;
   font-family: 'ITC Benguiat Std';
 }
 
-.btn {
-  background-color: white;
-  color: #333333;
+.submit {
+  text-align: center;
 }
 
-.form-signin {
-  max-width: 330px;
-  padding: 15px;
-  margin: 0 auto;
+.btn {
+  color: white;
+  background-color: tomato;
+  box-shadow: orange 1px 1px 3px;
+  font-size: 10pt;
+  margin: 5px;
 }
-.form-signin .form-signin-heading,
-.form-signin .checkbox {
-  margin-bottom: 10px;
+.btn:hover {
+  color: teal;
+  font-weight: bold;
+  background-color: #dcdcdc;
 }
-.form-signin .checkbox {
-  font-weight: normal;
-}
-.form-signin .form-control {
+
+.form-submit .form-control {
   position: relative;
+  max-width: 330px;
+  margin: 0 auto;
   height: auto;
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
@@ -44,16 +46,56 @@ body {
   padding: 10px;
   font-size: 16px;
 }
-.form-signin .form-control:focus {
+.form-submit .form-control:focus {
   z-index: 2;
 }
-.form-signin input[type="email"] {
+.form-submit input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
-.form-signin input[type="password"] {
+.form-submit input[type="password"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+
+hr.blur {
+    border: 0;
+    height: 0;
+    box-shadow: 0 0 2px 1px aqua;
+}
+
+span.user {
+  color: tomato;
+  font-family: 'ITC Benguiat Std';
+  font-weight: bold;
+  font-size: 14pt;
+}
+
+.user-rating {
+  color: tomato;
+  text-shadow: orange 1px 1px 5px;
+  font-size: 16pt;
+  animation: blinker 3s linear infinite;
+}
+
+.ratings {
+  color: #333333;
+  text-shadow: #dcdcdc 1px 1px 2px;
+  font-size: 10pt;
+}
+
+@keyframes blinker {  
+  50% { opacity: 0; }
+}
+
+img.rounded-avatar {
+  border-radius: 10px;
+  opacity: 0.5;
+  border: white 2px;
+}
+
+h4 {
+  font-style: italic;
 }

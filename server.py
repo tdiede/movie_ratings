@@ -29,68 +29,57 @@ def index():
     return render_template("homepage.html")
 
 
-@app.route('/register', methods=['GET'])
-def register_form():
-    """New users can create an account through this form."""
+@app.route('/process', methods=['POST'])
+def process():
+    """Figures out whether this is a login or register route."""
 
-    return render_template("register_form.html")
+    if request.form['submit'] == 'signin':
 
+        # Get form variables.
+        email = request.form['email']
+        password = request.form['password']
 
-@app.route('/register', methods=['POST'])
-def register_process():
-    """Process new user account registration."""
+        user = User.query.filter_by(email=email).first()
 
-    # Get form variables.
-    email = request.form['email']
-    password = request.form['password']
-    age = int(request.form['age'])
-    zipcode = request.form['zipcode']
+        if not user:
+            flash("You are not a registered user, %s. Please register." % email)
+            return redirect("/")
 
-    new_user = User(email=email, password=password, age=age, zipcode=zipcode)
+        if user.password != password:
+            flash("Incorrect password. Please try again.")
+            return redirect("/")
 
-    db.session.add(new_user)
-    db.session.commit()
+        session['user_id'] = user.user_id
 
-    flash("User %s added." % email)
-    return redirect("/")
+        flash("Logged in.")
+        return redirect("/users/%s" % user.user_id)
 
+    elif request.form['submit'] == 'register':
 
-@app.route('/login', methods=['GET'])
-def login_form():
-    """Registered users can log in through this form."""
+        # Get form variables.
+        email = request.form['email']
+        password = request.form['password']
 
-    return render_template("login_form.html")
+        user = User.query.filter_by(email=email).first()
 
+        if user:
+            flash("Email address already registered.")
+            return redirect("/")
 
-@app.route('/login', methods=['POST'])
-def login_process():
-    """Process user login."""
+        new_user = User(email=email, password=password)
 
-    # Get form variables.
-    email = request.form['email']
-    password = request.form['password']
+        db.session.add(new_user)
+        db.session.commit()
 
-    user = User.query.filter_by(email=email).first()
-
-    if not user:
-        flash("You are not a registered user, %s. Please register." % email)
-        return redirect("/register")
-
-    if user.password != password:
-        flash("Incorrect password. Please try again.")
-        return redirect("/login")
-
-    session['user_id'] = user.user_id
-
-    flash("Logged in.")
-    return redirect("/users/%s" % user.user_id)
+        flash("User %s added. Please sign in." % email)
+        return redirect("/")
 
 
 @app.route('/logout', methods=['POST'])
 def logout_process():
     """Process user logout."""
 
-    del session['user_login']
+    del session['user_id']
     flash('You are now logged out.')
     return redirect("/")
 
@@ -100,8 +89,8 @@ def user_list():
     """Show list of users."""
 
     users = User.query.all()
-
-    return render_template("user_list.html", users=users)
+    num_users = len(users)
+    return render_template("user_list.html", users=users, num_users=num_users)
 
 
 @app.route('/users/<int:user_id>')
@@ -192,7 +181,7 @@ def movie_detail(movie_id):
 
     # visual display (call to OMDB API)
     response = get_movie_info(movie_id)
-    visuals = json.loads(response.data)
+    data = json.loads(response.data)
 
     return render_template("movie.html",
                            movie=movie,
@@ -202,7 +191,7 @@ def movie_detail(movie_id):
                            eye_rating=eye_rating,
                            difference=difference,
                            beratement=beratement,
-                           visuals=visuals)
+                           data=data)
 
 
 @app.route('/movies/<int:movie_id>', methods=['POST'])

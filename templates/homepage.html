@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 
+
+{% if "user_id" in session %}
+
+
+
 <h1>Ratings</h1>
 
 <h2>Movies</h2>
@@ -9,13 +14,11 @@
 <h2>Users</h2>
 <p><a href="/users">View all users</a></p>
 
+<hr>
 
-{% if "user_id" in session %}
-    <a href="/logout">Logout</a>
 {% else %}
-    <a href="/login">Login</a>
+
 {% endif %}
 
 {% endblock %}
-
 

@@ -1,44 +1,103 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<img src='{{ visuals.Poster }}'/>
+<img src='{{ data.Poster }}'/>
 
-{{ visuals }}
+
+
+
+{% if "user_id" in session %}
+{% if user_rating %}
+<h4>HOW YOU RATED <span class="user">{{ movie.title}}</span></h4>
+<p>Your current rating of this movie: <span class="user-rating">{% for n in range(user_rating.score) %} &#x2605; {% endfor %}</span></p>
+<h4>WOULD YOU LIKE TO CHANGE YOUR RATING?</h4>
+{% else %}
+<h4>HOW DO YOU RATE <span class="user">{{ movie.title}}</span>?</h4>
+{% endif %}
+<form action="/movies/{{ movie.movie_id }}" method="POST">
+    <label>Rating:
+      <input type="number" name="score">
+    </label>
+    <input type="submit" value="Rate">
+</form>
+
+
+
+
 
 <h2>{{ movie.title }}</h2>
 <p>Released: {{ movie.release_date }}</p>
 <p>Check it out on <a href="{{ movie.imdb_url }}">IMDB</a>!</p>
 
+
+
 {% if movie.ratings %}
-<h2>Ratings</h2>
+<h4>HOW USERS ARE RATING <span class="user">{{ movie.title}}</span></h4>
+AVERAGE RATING: {{ average }}
+PREDICTION: {{ prediction }}
+EYE: {{ eye_rating }}
+DIFF: {{ difference }}
+BERATEMENT: {{ beratement }}
+
 <ul>
   {% for rating in movie.ratings %}
   <li>
     <a href="/users/{{ rating.user_id }}">{{ rating.user_id }}</a>
-    rated {{ rating.score }}
+    rated <span class="ratings">{% for n in range(rating.score) %} &#x2605; {% endfor %}</span>
   </li>
   {% endfor %}
 </ul>
 {% endif %}
 
-{% if "user_id" in session %}
-<h2>Your Rating</h2>
-{% if user_rating %}
-<p>You currently rate this a {{ user_rating.score }}</p>
-{% endif %}
 
-<form action="/movies/{{ movie.movie_id }}" method="POST">
-  <div>
-    <label>Rating:
-      <input type="number" name="score">
-    </label>
-  </div>
 
-  <div>
-    <input type="submit" value="Rate">
-  </div>
 
-</form>
+{{ data.Plot }}
+<br>
+{{ data.Rated }}
+<br>
+{{ data.Language }}
+<br>
+{{ data.Title }}
+<br>
+{{ data.Country }}
+<br>
+{{ data.Writer }}
+<br>
+{{ data.Metascore }}
+<br>
+{{ data.imdbRating }}
+<br>
+{{ data.Director }}
+<br>
+{{ data.Released }}
+<br>
+{{ data.Year }}
+<br>
+{{ data.Awards }}
+<br>
+{{ data.Poster }}
+<br>
+{{ data.Genre }}
+<br>
+{{ data.Actors }}
+<br>
+{{ data.Runtime }}
+<br>
+{{ data.Type }}
+<br>
+{{ data.Response }}
+<br>
+{{ data.imdbVotes }}
+<br>
+{{ data.imdbID }}
+
+
+
+
+
+
+
 
 {% endif %}
 

@@ -1,16 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>{{ user.email }} | {{ user.user_id }}</h1>
+<hr class="blur">
+<br>
+
+
+<p>RECORD ID: <span class="user">{{ user.user_id }}</span></p>
+<p>USER EMAIL: <span class="user">{{ user.email }}</span></p>
+
 <div id="user_profile">
-    <p>Age: {{ user.age }}</p>
-    <p>Zipcode: {{ user.zipcode }}</p>
+<!--     <p>Age: {{ user.age }}</p> |
+    <p>Zipcode: {{ user.zipcode }}</p> -->
 </div>
 
-<div id="user_ratings">
-    {% if user.ratings %}
+<hr class="blur">
+<br>
 
-        <h2>Your Movie Ratings</h2>
+<div id="user_ratings">
+    <h4>| Your Movie Ratings |</h4>
+    {% if user.ratings %}
         <ul>
         {% for rating in user.ratings %}
             <li>
