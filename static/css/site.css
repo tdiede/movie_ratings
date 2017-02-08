@@ -1,7 +1,11 @@
 body {
-  padding-top: 40px;
+  margin-top: 60px;
+  padding-top: 20px;
   padding-bottom: 40px;
-  background-color: #eee;
+  background-color: #eeeeee;
+}
+
+nav {
 }
 
 .intro {
@@ -60,11 +64,11 @@ body {
   border-top-right-radius: 0;
 }
 
-.form-logout {
+/*.form-logout {
   position: fixed;
   right: 50px;
   top: 50px;
-}
+}*/
 
 hr.blur {
     border: 0;
@@ -108,7 +112,7 @@ span.user {
 .fa-film {
   font-weight: bold;
 }
-.fa-user:hover, a:hover {
+a:hover {
   color: tomato;
   text-decoration: none;
   cursor: pointer;

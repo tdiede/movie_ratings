@@ -6,16 +6,12 @@
 <hr class="blur">
 <br>
 
-
-
 <p>RECORD ID: <span class="user">{{ user.user_id }}</span></p>
 <p>USER EMAIL: <span class="user">{% if user.email %} {{ user.email }} {% else %}example@example.com{% endif %}</span></p>
 
-<div id="user_profile">
 <!-- <p>Age: {{ user.age }}</p> -->
 <!-- | -->
 <!-- <p>Zipcode: {{ user.zipcode }}</p> -->
-</div>
 
 <hr class="blur">
 <br>
@@ -34,8 +30,10 @@
         </li>
     {% endfor %}
     </ul>
+
 {% else %}
 <p> This user has not yet rated any movies.</p>
+
 {% endif %}
 
 
