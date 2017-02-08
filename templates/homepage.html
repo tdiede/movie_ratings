@@ -9,4 +9,13 @@
 <h2>Users</h2>
 <p><a href="/users">View all users</a></p>
 
+
+{% if "user_id" in session %}
+    <a href="/logout">Logout</a>
+{% else %}
+    <a href="/login">Login</a>
+{% endif %}
+
 {% endblock %}
+
+
