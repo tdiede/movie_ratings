@@ -1,32 +1,42 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<h2>User</h2>
+
 <hr class="blur">
 <br>
+
 
 
 <p>RECORD ID: <span class="user">{{ user.user_id }}</span></p>
-<p>USER EMAIL: <span class="user">{{ user.email }}</span></p>
+<p>USER EMAIL: <span class="user">{% if user.email %} {{ user.email }} {% else %}example@example.com{% endif %}</span></p>
 
 <div id="user_profile">
-<!--     <p>Age: {{ user.age }}</p> |
-    <p>Zipcode: {{ user.zipcode }}</p> -->
+<!-- <p>Age: {{ user.age }}</p> -->
+<!-- | -->
+<!-- <p>Zipcode: {{ user.zipcode }}</p> -->
 </div>
 
 <hr class="blur">
 <br>
 
-<div id="user_ratings">
-    <h4>| Your Movie Ratings |</h4>
-    {% if user.ratings %}
-        <ul>
-        {% for rating in user.ratings %}
-            <li>
-                <a href="/movies/{{ rating.movie_id }}">{{ rating.movie.title }}</a> rated {{ rating.score }}
-            </li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-</div>
+
+<h4>| Movie Ratings | <span class="subtitle"> These are all the movies this user has rated.</span></h4>
+<br>
+
+{% if user.ratings %}
+    <ul>
+    {% for rating in user.ratings %}
+        <li>
+        <a href="/movies/{{ rating.movie_id }}"><i class="fa fa-film"></i> {{ rating.movie.title }}
+        <span class="movie-ratings">{% for n in range(rating.score) %} &#x2605; {% endfor %}</span>
+        </a>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+<p> This user has not yet rated any movies.</p>
+{% endif %}
+
 
 {% endblock %}

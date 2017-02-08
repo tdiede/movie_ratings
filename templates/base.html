@@ -26,15 +26,19 @@
     <strong>Alert! </strong> {{ flash }}
     </div>     
     {% endfor %}
+
 </div>
+<div class="container">
 
-    <div class="container">
+    {% if "user_id" in session %}
+        <form class="form-logout" action="/logout" method="POST">
+            <button type="submit" class="btn btn-lg" name="submit" value="logout">LOG OUT</button>
+        </form>
+    {% endif %}
 
-        {% if "user_id" in session %}
-            <form action="/logout" method="POST">
-                <button type="submit" class="btn btn-lg" name="submit" value="logout">LOG OUT</button>
-            </form>
-        {% else %}
+</div>
+<div class="container">
+{% if "user_id" not in session %}
 
         <div class='intro'>
             <h1>What to watch?</h1>
@@ -52,13 +56,11 @@
             </div>
         </form>
 
-
-
-
-    </div>
 {% endif %}
 
 {% block content %} put your content here {% endblock %}
+
+</div>
 
 </body>
 </html>

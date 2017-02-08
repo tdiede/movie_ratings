@@ -60,6 +60,12 @@ body {
   border-top-right-radius: 0;
 }
 
+.form-logout {
+  position: fixed;
+  right: 50px;
+  top: 50px;
+}
+
 hr.blur {
     border: 0;
     height: 0;
@@ -85,17 +91,53 @@ span.user {
   text-shadow: #dcdcdc 1px 1px 2px;
   font-size: 10pt;
 }
+.movie-ratings {
+  color: aqua;
+  text-shadow: teal 1px 1px 2px;
+  font-size: 10pt;
+  float: right;
+}
 
 @keyframes blinker {  
   50% { opacity: 0; }
+}
+
+.fa-user, .fa-film, a {
+  color: #333333;
+}
+.fa-film {
+  font-weight: bold;
+}
+.fa-user:hover, a:hover {
+  color: tomato;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+ul {
+  /*max-height: 1000px;*/
+  list-style: none;
+  padding-left: 7px;
+  column-width: 300px;
+  column-rule: 1px #dcdcdc dashed;
+  border-left: 1px #dcdcdc dashed;
+}
+
+li {
+  display:inline-block;
+  width: 100%;
+}
+
+h4 {
+  font-style: italic;
+}
+.subtitle {
+  font-size: 10pt;
+  font-style: normal;
 }
 
 img.rounded-avatar {
   border-radius: 10px;
   opacity: 0.5;
   border: white 2px;
-}
-
-h4 {
-  font-style: italic;
 }
