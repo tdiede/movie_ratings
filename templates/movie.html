@@ -11,7 +11,7 @@
 <!-- ABOUT THIS MOVIE -->
 <div class="row">
 
-  {% if data.Poster %}
+  {% if data.Poster and data.Poster != 'N/A' %}
   <!-- IMAGE FOR THIS MOVIE -->
   <div class="col-md-4 col-sm-12 col-xs-12">
 
@@ -109,9 +109,14 @@
     <p>Would you like to change your rating?</p><!-- or clear -->
 
     {% else %}
-    <h4 class="inline-text">We predict your rating will be ___<span id="click-reveal-prediction">{{ prediction }}</span>___ based on your other movie ratings.</h4>
+    {% if prediction %}
+    <p class="inline-text">We predict your rating will be
     <button type="submit" class="btn" name="submit" id="yes">show</button>
-    <button type="submit" class="btn" name="submit" id="no">hide</button>
+    <button type="submit" class="btn" name="submit" id="no">{{ '%.1f' | format(prediction) }}</button>
+    based on your other movie ratings.</p>
+    {% else %}
+    <p class="inline-text">You must rate at least 2 movies in order for us to predict your opinion on this movie.</p>
+    {% endif %}
     {% endif %}
 
 <form class="form-rate" action="/movies/{{ movie.movie_id }}" method="POST">
@@ -140,15 +145,15 @@
 <br>
 {% endif %}
 <h6 class="inline-text">AVERAGE RATING (on this site) </h6>
-<span class="data"> {{ '%.2f' | format(average) }}</span>
+<span class="data"> {{ '%.1f' | format(average) }}</span>
 
 <br>
 <br>
 <!-- <p>{{ eye_rating }}</p> -->
-{% if user_rating %}
+{% if user_rating and beratement %}
 <h6 class="inline-text">{{ beratement }}</h6>
-<p class="inline-text">The difference between your rating and the most "expert" user on this site is
-<strong>{{ '%.1f' | format(difference) }}</strong>.</p>
+<span class="inline-text">The difference between your rating and the most "expert" user on this site is
+<strong>{{ '%.1f' | format(difference) }}</strong>.</span>
 {% endif %}
 
 </div>
@@ -194,7 +199,6 @@
   const prediction = {{ prediction|safe }};
   console.log(prediction);
 
-  $("#click-reveal-prediction").hide();
   $("#no").hide();
 
   $(document).ready(function() {
@@ -203,7 +207,6 @@
   });
 
   function togglePrediction(e) {
-    $("#click-reveal-prediction").toggle();
     $("#yes").toggle();
     $("#no").toggle();
   }

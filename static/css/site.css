@@ -47,7 +47,7 @@ body {
   height: auto;
   box-sizing: border-box;
   padding: 10px;
-  font-size: 16pt;
+  font-size: 12pt;
 }
 .form-submit .form-control:focus {
   z-index: 2;
@@ -198,6 +198,9 @@ div#movie-details {
 h4.inline-text, h6.inline-text {
   font-size: 10pt;
   display: inline;
+}
+p.inline-text {
+  max-width: 300px;
 }
 
 

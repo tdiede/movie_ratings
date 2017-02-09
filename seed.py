@@ -6,6 +6,9 @@ from sqlalchemy import func
 from model import connect_to_db, db
 from model import (User, Movie, Rating)
 
+import omdb
+import json
+
 from server import app
 
 import os
@@ -69,9 +72,45 @@ def load_movies():
         else:
             release_date = None
 
+        # call to OMDB API
+        print title
+        r = omdb.get_movie_info(title,release_date)
+        if r.status_code != 200:
+            continue
+
+        # Content of Response object as dict.
+        data = r.json()
+
+        imdb_rating = data.get('imdbRating')
+        tomatoes = data.get('tomatoRating')
+        poster_url = data.get('Poster')
+        year = data.get('Year')
+        plot = data.get('Plot')
+        genre = data.get('Genre')
+        awards = data.get('Awards')
+        actors = data.get('Actors')
+        director = data.get('Director')
+        writer = data.get('Writer')
+        language = data.get('Language')
+        country = data.get('Country')
+        runtime = data.get('Runtime')
+
         movie = Movie(title=title,
                       release_date=release_date,
-                      imdb_url=imdb_url)
+                      imdb_url=imdb_url,
+                      imdb_rating=imdb_rating,
+                      tomatoes=tomatoes,
+                      poster_url=poster_url,
+                      year=year,
+                      plot=plot,
+                      genre=genre,
+                      awards=awards,
+                      actors=actors,
+                      director=director,
+                      writer=writer,
+                      language=language,
+                      country=country,
+                      runtime=runtime)
 
         # We need to add to the session or it won't ever be stored
         db.session.add(movie)
