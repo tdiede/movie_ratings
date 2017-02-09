@@ -97,8 +97,17 @@ def user_list():
 def user_profile(user_id):
     """Show user profile and information."""
 
+    current_user = session.get('user_id')
     user = User.query.get(user_id)
-    return render_template("user.html", user=user)
+    return render_template("user.html", user=user, current_user=current_user)
+
+
+@app.route('/profile')
+def current_profile():
+    """Show your user profile and information."""
+
+    user_id = session.get('user_id')
+    return redirect("/users/%s" % user_id)
 
 
 @app.route('/movies')
@@ -106,7 +115,16 @@ def movie_list():
     """Show list of movies."""
 
     movies = Movie.query.order_by('title').all()
-    return render_template("movie_list.html", movies=movies)
+    num_movies = len(movies)
+
+    average_ratings = {}
+    for movie in movies:
+        # Get average rating of movie.
+        rating_scores = [r.score for r in movie.ratings]
+        avg_rating = float(sum(rating_scores)) / len(rating_scores)
+        average_ratings[movie.movie_id] = round(avg_rating,2)
+
+    return render_template("movie_list.html", movies=movies, num_movies=num_movies, average_ratings=average_ratings)
 
 
 @app.route('/movies/<int:movie_id>', methods=['GET'])
@@ -124,7 +142,7 @@ def movie_detail(movie_id):
 
     # Get average rating of movie.
     rating_scores = [r.score for r in movie.ratings]
-    avg_rating = float(sum(rating_scores)) / len(rating_scores)
+    average = float(sum(rating_scores)) / len(rating_scores)
 
     prediction = None
 
@@ -186,7 +204,7 @@ def movie_detail(movie_id):
     return render_template("movie.html",
                            movie=movie,
                            user_rating=user_rating,
-                           average=avg_rating,
+                           average=average,
                            prediction=prediction,
                            eye_rating=eye_rating,
                            difference=difference,

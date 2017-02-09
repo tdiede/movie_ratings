@@ -1,111 +1,213 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<img src='{{ data.Poster }}'/>
+
+<h2 class="movie-title"><a target="_blank" href="{{ movie.imdb_url }}">{{ movie.title }} </a>
+{% if data.Year %}<span class="subtitle">({{ data.Year }})</span></h2>{% endif %}
+
+<hr class="blur">
+<br>
+
+<!-- ABOUT THIS MOVIE -->
+<div class="row">
+
+  {% if data.Poster %}
+  <!-- IMAGE FOR THIS MOVIE -->
+  <div class="col-md-4 col-sm-12 col-xs-12">
+
+    <img id="movie-poster" src='{{ data.Poster }}'/>
+
+  </div>
+  {% endif %}
+
+
+  <!-- GENERAL DATA ABOUT THIS MOVIE -->
+  <div class="col-md-8 col-sm-12 col-xs-12">
+
+      <div id="movie-details">
+          {% if data.Plot %}
+          <h6 class="inline-text">SUMMARY | </h6>
+          <span class="movie-plot"> {{ data.Plot }}</span>
+          {% endif %}
+          <br>
+          <br>
+          {% if data.Genre %}
+          <h6 class="inline-text">GENRE – </h6>
+          <span class="movie-details"> {{ data.Genre }}</span>
+          {% endif %}
+          <br>
+          {% if data.Awards %}
+          <h6 class="inline-text">AWARDS – </h6>
+          <span class="movie-details"> {{ data.Awards }}</span>
+          {% endif %}
+          <br>
+          {% if data.Actors %}
+          <h6 class="inline-text">ACTORS – </h6>
+          <span class="movie-details"> {{ data.Actors }}</span>
+          {% endif %}
+          <br>
+          {% if data.Director %}
+          <h6 class="inline-text">DIRECTED BY – </h6>
+          <span class="movie-details"> {{ data.Director }}</span>
+          {% endif %}
+          <br>
+          {% if data.Writer %}
+          <h6 class="inline-text">WRITTEN BY – </h6>
+          <span class="movie-details"> {{ data.Writer }}</span>
+          {% endif %}
+          <br>
+          <br>
+          {% if data.Language %}
+          <h6 class="inline-text">LANGUAGE – </h6>
+          <span class="movie-details"> {{ data.Language }}</span>
+          {% endif %}
+          <br>
+          {% if data.Country %}
+          <h6 class="inline-text">COUNTRY – </h6>
+          <span class="movie-details"> {{ data.Country }}</span>
+          {% endif %}
+          <br>
+          {% if data.Runtime %}
+          <h6 class="inline-text">RUNTIME – </h6>
+          <span class="movie-details"> {{ data.Runtime }}</span>
+          {% endif %}
+
+      <!-- {{ data.Poster }} -->
+      <!-- {{ data.Title }} -->
+      <!-- {{ data.Year }} -->
+      <!-- {{ data.Released }} -->
+      <!-- {{ data.Rated }} -->
+      <!-- {{ data.imdbID }} -->
+      <!-- {{ data.imdbVotes }} -->
+      <!-- {{ data.Metascore }} -->
+      <!-- {{ data.Type }} -->
+      <!-- {{ data.Response }} -->
+      </div>
+
+  </div>
+
+</div>
+
+<br>
 
 
 
+<div class="row">
+<hr class="line"><br>
+<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 
+<!-- HOW YOU RATE THIS MOVIE -->
 {% if "user_id" in session %}
-{% if user_rating %}
-<h4>HOW YOU RATED <span class="user">{{ movie.title}}</span></h4>
-<p>Your current rating of this movie: <span class="user-rating">{% for n in range(user_rating.score) %} &#x2605; {% endfor %}</span></p>
-<h4>WOULD YOU LIKE TO CHANGE YOUR RATING?</h4>
-{% else %}
-<h4>HOW DO YOU RATE <span class="user">{{ movie.title}}</span>?</h4>
-{% endif %}
-<form action="/movies/{{ movie.movie_id }}" method="POST">
-    <label>Rating:
-      <input type="number" name="score">
-    </label>
-    <input type="submit" value="Rate">
+<!-- <hr class="blur"> -->
+<h4>YOUR OPINION | <span class="subtitle"> How do you rate <span class="movie movie-title">{{ movie.title}}</span> ?</span></h4>
+<hr class="blur">
+
+    {% if user_rating %}
+    <p>Your current rating of this movie: <span class="your-rating">
+      {% for n in range(user_rating.score) %} &#x2605; {% endfor %}
+    </span></p>
+    <p>Would you like to change your rating?</p><!-- or clear -->
+
+    {% else %}
+    <h4 class="inline-text">We predict your rating will be ___<span id="click-reveal-prediction">{{ prediction }}</span>___ based on your other movie ratings.</h4>
+    <button type="submit" class="btn" name="submit" id="yes">show</button>
+    <button type="submit" class="btn" name="submit" id="no">hide</button>
+    {% endif %}
+
+<form class="form-rate" action="/movies/{{ movie.movie_id }}" method="POST">
+    <label for="movieRating" class="sr-only">rating</label>
+    <input type="number" min="1" max="5" name="score" id="movieRating" placeholder="(1-5 stars)" autofocus>
+    <button type="submit" class="btn" name="submit" value="rate">RATE</button>
+    <!-- <button type="submit" class="btn" name="submit" value="clear" id="clear">X</button> -->
 </form>
 
+{% endif %}
+
+<br>
+</div>
+<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+
+<!-- HOW OTHER SITES ARE RATING THIS MOVIE -->
+<!-- <hr class="blur"> -->
+<h4>THE DATA | <span class="subtitle"> How does your rating of <span class="movie movie-title">{{ movie.title}}</span> compare?</span></h4>
+<hr class="blur">
+
+<div id="other-data">
+{% if data.imdbRating %}
+<h6 class="inline-text">IMDB RATING (out of 10) </h6>
+<span class="data"> {{ data.imdbRating }}</span>
+<br>
+{% endif %}
+<h6 class="inline-text">AVERAGE RATING (on this site) </h6>
+<span class="data"> {{ '%.2f' | format(average) }}</span>
+
+<br>
+<br>
+<!-- <p>{{ eye_rating }}</p> -->
+{% if user_rating %}
+<h6 class="inline-text">{{ beratement }}</h6>
+<p class="inline-text">The difference between your rating and the most "expert" user on this site is
+<strong>{{ '%.1f' | format(difference) }}</strong>.</p>
+{% endif %}
+
+</div>
+
+<br>
+</div>
+</div>
 
 
 
+<div class="row">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-<h2>{{ movie.title }}</h2>
-<p>Released: {{ movie.release_date }}</p>
-<p>Check it out on <a href="{{ movie.imdb_url }}">IMDB</a>!</p>
-
-
-
+<!-- HOW OTHER USERS ARE RATING THIS MOVIE -->
 {% if movie.ratings %}
-<h4>HOW USERS ARE RATING <span class="user">{{ movie.title}}</span></h4>
-AVERAGE RATING: {{ average }}
-PREDICTION: {{ prediction }}
-EYE: {{ eye_rating }}
-DIFF: {{ difference }}
-BERATEMENT: {{ beratement }}
+<hr class="line"><br>
+<h4>POPULAR OPINION | <span class="subtitle"> How other users of this app are rating <span class="movie movie-title">{{ movie.title}}</span> :</span></h4>
+<hr class="blur">
 
-<ul>
+<ul class="ratings">
   {% for rating in movie.ratings %}
   <li>
-    <a href="/users/{{ rating.user_id }}">{{ rating.user_id }}</a>
-    rated <span class="ratings">{% for n in range(rating.score) %} &#x2605; {% endfor %}</span>
+    <a href="/users/{{ rating.user_id }}"><i class="fa fa-user aqua-shadow"></i> {{ '%05d' | format(rating.user_id) }}
+    <span class="ratings-movie">{% for n in range(rating.score) %} &#x2605; {% endfor %}</span>
+  </a>
   </li>
   {% endfor %}
 </ul>
-{% endif %}
 
-
-
-
-{{ data.Plot }}
-<br>
-{{ data.Rated }}
-<br>
-{{ data.Language }}
-<br>
-{{ data.Title }}
-<br>
-{{ data.Country }}
-<br>
-{{ data.Writer }}
-<br>
-{{ data.Metascore }}
-<br>
-{{ data.imdbRating }}
-<br>
-{{ data.Director }}
-<br>
-{{ data.Released }}
-<br>
-{{ data.Year }}
-<br>
-{{ data.Awards }}
-<br>
-{{ data.Poster }}
-<br>
-{{ data.Genre }}
-<br>
-{{ data.Actors }}
-<br>
-{{ data.Runtime }}
-<br>
-{{ data.Type }}
-<br>
-{{ data.Response }}
-<br>
-{{ data.imdbVotes }}
-<br>
-{{ data.imdbID }}
-
-
-
-
-
-
-
+{% else %}
+<p> This movie has not yet received any ratings.</p>
 
 {% endif %}
 
+<hr class="blur">
+
+</div>
+</div>
 
 
+<script type="text/javascript">
 
+  const prediction = {{ prediction|safe }};
+  console.log(prediction);
 
+  $("#click-reveal-prediction").hide();
+  $("#no").hide();
 
+  $(document).ready(function() {
+    $("#yes").on('click',togglePrediction);
+    $("#no").on('click',togglePrediction);
+  });
 
+  function togglePrediction(e) {
+    $("#click-reveal-prediction").toggle();
+    $("#yes").toggle();
+    $("#no").toggle();
+  }
+
+</script>
 
 {% endblock %}

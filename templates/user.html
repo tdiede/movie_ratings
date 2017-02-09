@@ -1,10 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>User</h2>
-
-<hr class="blur">
-<br>
+<!-- <h2>User</h2> -->
 
 <p>RECORD ID: <span class="user">{{ user.user_id }}</span></p>
 <p>USER EMAIL: <span class="user">{% if user.email %} {{ user.email }} {% else %}example@example.com{% endif %}</span></p>
@@ -13,28 +10,38 @@
 <!-- | -->
 <!-- <p>Zipcode: {{ user.zipcode }}</p> -->
 
+<br>
+
+<h4>USER MOVIE RATINGS | <span class="subtitle"> These are all the movies
+{% if current_user == user.user_id %}
+ you have
+{% else %}
+ this user has
+{% endif %}
+ rated.</span></h4>
+
 <hr class="blur">
-<br>
-
-
-<h4>| Movie Ratings | <span class="subtitle"> These are all the movies this user has rated.</span></h4>
-<br>
 
 {% if user.ratings %}
     <ul>
     {% for rating in user.ratings %}
         <li>
         <a href="/movies/{{ rating.movie_id }}"><i class="fa fa-film"></i> {{ rating.movie.title }}
-        <span class="movie-ratings">{% for n in range(rating.score) %} &#x2605; {% endfor %}</span>
+        <span class="ratings-user">{% for n in range(rating.score) %} &#x2605; {% endfor %}</span>
         </a>
         </li>
     {% endfor %}
     </ul>
 
 {% else %}
-<p> This user has not yet rated any movies.</p>
+<p>
+{% if current_user == user.user_id %}
+You have
+{% else %}
+This user has
+{% endif %}
+ not yet rated any movies.</p>
 
 {% endif %}
-
 
 {% endblock %}

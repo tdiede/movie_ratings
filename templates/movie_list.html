@@ -1,13 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Movies</h1>
-<ul>
+
+<!-- <h2>Movies</h2> -->
+<h4>MOVIES | <span class="subtitle"> There are {{ num_movies }} movies in this database:
+<span class="movie-title"> Movie Title </span><span class="avg-rating"> AVG RATING </span>
+(stats updated daily)</span></h4>
+
+
+<hr class="blur">
+
+
+<ul class="movies">
 {% for movie in movies %}
-  <li>
-    <a href="/movies/{{ movie.movie_id }}">{{ movie.title }}</a>
-  </li>
+{% if movie.title %}
+<li id="{{ movie.movie_id }}"><i class="fa fa-film"></i><a class="movie-title" href="movies/{{ movie.movie_id }}"> {{ movie.title }} </a><span class="avg-rating">{{ average_ratings[movie.movie_id] }}</span></li>
+{% endif %}
 {% endfor %}
 </ul>
+
 
 {% endblock %}

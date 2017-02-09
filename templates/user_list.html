@@ -1,15 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>Users</h2>
-<h4>| {{ num_users }} | <span class="subtitle"> *names fictiously generated using <a target="_blank" href="https://github.com/muffinista/namey">'namey' API</a></span></h4>
+<!-- <h2>Users</h2> -->
+<h4>USERS | <span class="subtitle"> There are {{ num_users }} users who are rating movies on this app. All names fictiously generated using
+    <a target="_blank" href="https://github.com/muffinista/namey"> an API called 'namey'</a>.</span></h4>
 
 
 <hr class="blur">
 <br>
 
 
-<ul>
+<ul class="users">
 {% for user in users %}
 <li id="{{ user.user_id }}"><a href="users/{{ user.user_id }}"></a></li>
 {% endfor %}
@@ -50,6 +51,5 @@
     $(document).ready(fillUsernames(numUsers));
 
 </script>
-
 
 {% endblock %}

@@ -28,16 +28,19 @@
     {% endfor %}
 
 </div>
-<div class="container">
+<div class="container-fluid">
 
     {% if "user_id" in session %}
-        <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="navbar navbar-default navbar-static-top">
             <div class="container">
                 <form class="navbar-form navbar-left" action="/movies" method="GET">
                     <button type="submit" class="btn btn-default navbar-btn">MOVIES</button>
                 </form>
                 <form class="navbar-form navbar-left" action="/users" method="GET">
                     <button type="submit" class="btn btn-default navbar-btn">USERS</button>
+                </form>
+                <form class="navbar-form navbar-right form-profile" action="/profile" method="GET">
+                    <button type="submit" class="btn btn-default navbar-btn">PROFILE</button>
                 </form>
                 <form class="navbar-form navbar-right form-logout" action="/logout" method="POST">
                     <button type="submit" class="btn btn-default navbar-btn" name="submit" value="logout">log out</button>

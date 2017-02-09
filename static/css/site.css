@@ -1,11 +1,14 @@
 body {
-  margin-top: 60px;
-  padding-top: 20px;
+  /*margin-top: 60px;*/
+  /*padding-top: 20px;*/
   padding-bottom: 40px;
   background-color: #eeeeee;
 }
-
-nav {
+.navbar-default {
+  background-color: rgba(255,255,255,0.5) #f8f8f8;
+}
+.navbar-form {
+  border: none;
 }
 
 .intro {
@@ -15,7 +18,6 @@ nav {
   color: teal;
   text-shadow: aqua 1px 1px 5px;
 }
-
 .intro > h3 {
   color: orange;
   text-shadow: tomato 1px 1px 5px;
@@ -25,7 +27,6 @@ nav {
 .submit {
   text-align: center;
 }
-
 .btn {
   color: white;
   background-color: tomato;
@@ -44,11 +45,9 @@ nav {
   max-width: 330px;
   margin: 0 auto;
   height: auto;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   padding: 10px;
-  font-size: 16px;
+  font-size: 16pt;
 }
 .form-submit .form-control:focus {
   z-index: 2;
@@ -63,6 +62,16 @@ nav {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+.form-rate {
+  position: relative;
+  max-width: 300px;
+}
+.form-rate input[type="number"] {
+  width: 150px;
+  height: auto;
+  padding: 10px;
+  font-size: 11pt;
+}
 
 /*.form-logout {
   position: fixed;
@@ -73,72 +82,173 @@ nav {
 hr.blur {
     border: 0;
     height: 0;
+    margin-top: 0;
+    padding-bottom: 7px;
     box-shadow: 0 0 2px 1px aqua;
 }
-
-span.user {
-  color: tomato;
-  font-family: 'ITC Benguiat Std';
+hr.line {
+    border: 0;
+    height: 0;
+    opacity: 0.2;
+    box-shadow: 0 0 2px 3px aqua;
+}
+h4 {
+  font-size: 11pt;
   font-weight: bold;
-  font-size: 14pt;
+  font-style: italic;
+}
+.subtitle {
+  font-size: 10pt;
+  font-weight: normal;
+  font-style: normal;
+}
+.movie-title {
+  font-style: italic;
+}
+.data {
+  font-size: 11pt;
+  font-weight: bold;
+  font-style: normal;
+  float: right;
+}
+div#other-data {
+  max-width: 300px;
 }
 
-.user-rating {
-  color: tomato;
-  text-shadow: orange 1px 1px 5px;
-  font-size: 16pt;
-  animation: blinker 3s linear infinite;
+
+/* general list formatting */
+li {
+  display:inline-block;
+  width: 100%;
+}
+ul {
+  /*max-height: 1000px;*/
+  list-style: none;
+  padding-left: 7px;
+  column-rule: 1px #888888 dashed;
+  border-left: 1px #888888 dashed;
+}
+ul.users {
+  column-width: 300px;
+}
+ul.movies {
+  column-width: 250px;
+}
+ul.ratings {
+  column-width: 150px;
+  border-right: 1px #888888 dashed;
 }
 
-.ratings {
+
+span.ratings-user {
+  color: #333333;
+  text-shadow: #dcdcdc 1px 1px 2px;
+  font-size: 10pt;
+  float: right;
+}
+span.ratings-movie {
   color: #333333;
   text-shadow: #dcdcdc 1px 1px 2px;
   font-size: 10pt;
 }
-.movie-ratings {
+span.ratings {
   color: aqua;
   text-shadow: teal 1px 1px 2px;
   font-size: 10pt;
   float: right;
 }
-
-@keyframes blinker {  
-  50% { opacity: 0; }
+span.avg-rating {
+  color: tomato;
+  font-size: 10pt;
+  font-weight: bold;
+  font-style: normal;
 }
 
+
+
+img#movie-poster {
+  height: 500px;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  box-shadow: -2px 0 20px rgba(0,0,0,0.2);
+}
+div#movie-details {
+  height: 500px;
+  overflow-y: scroll;
+  padding: 15px;
+  background-color: white;
+  box-shadow: -2px 0 20px rgba(0,0,0,0.2);
+  border-radius: 7px;
+}
+.movie-plot {
+  color: #333333;
+  font-family: 'ITC Benguiat Std';
+  font-size: 11pt;
+  font-style: italic;
+  /*text-indent: 20px;*/
+}
+.movie-details {
+  color: #333333;
+  font-family: 'ITC Benguiat Std';
+  font-size: 11pt;
+  font-style: normal;
+}
+h4.inline-text, h6.inline-text {
+  font-size: 10pt;
+  display: inline;
+}
+
+
+a:hover {
+  color: tomato;
+  text-decoration: none;
+  cursor: pointer;
+}
 .fa-user, .fa-film, a {
   color: #333333;
 }
 .fa-film {
   font-weight: bold;
 }
-a:hover {
+.aqua-shadow {
+  text-shadow: aqua 1px 1px 2px;
+}
+
+
+
+
+
+
+
+
+
+/* how user rates a movie */
+
+@keyframes blinker {  
+  50% { opacity: 0; }
+}
+span.your-rating {
   color: tomato;
-  text-decoration: none;
-  cursor: pointer;
+  text-shadow: orange 1px 1px 5px;
+  font-size: 16pt;
+  animation: blinker 3s linear infinite;
+}
+span.user {
+  color: tomato;
+  font-family: 'ITC Benguiat Std';
+  font-weight: bold;
+  font-size: 14pt;
+}
+span.movie {
+  color: black;
+  font-weight: bold;
+}
+#yes, #no {
+  display: inline;
 }
 
-ul {
-  /*max-height: 1000px;*/
-  list-style: none;
-  padding-left: 7px;
-  column-width: 300px;
-  column-rule: 1px #dcdcdc dashed;
-  border-left: 1px #dcdcdc dashed;
-}
-
-li {
-  display:inline-block;
-  width: 100%;
-}
-
-h4 {
-  font-style: italic;
-}
-.subtitle {
-  font-size: 10pt;
-  font-style: normal;
-}
 
 img.rounded-avatar {
   border-radius: 10px;
