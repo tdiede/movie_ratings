@@ -72,31 +72,35 @@ def load_movies():
         else:
             release_date = None
 
-        # call to OMDB API
-        print title
-        r = omdb.get_movie_info(title,release_date)
-        if r.status_code != 200:
-            continue
+        # to be calculated later...
+        avg_rating = None
 
-        # Content of Response object as dict.
-        data = r.json()
+        # # call to OMDB API
+        # r = omdb.get_movie_info(title,release_date)
+        # if r.status_code != 200:
+        #     continue
 
-        imdb_rating = data.get('imdbRating')
-        tomatoes = data.get('tomatoRating')
-        poster_url = data.get('Poster')
-        year = data.get('Year')
-        plot = data.get('Plot')
-        genre = data.get('Genre')
-        awards = data.get('Awards')
-        actors = data.get('Actors')
-        director = data.get('Director')
-        writer = data.get('Writer')
-        language = data.get('Language')
-        country = data.get('Country')
-        runtime = data.get('Runtime')
+        # # Content of Response object as dict.
+        # data = r.json()
+        data = {}
+
+        imdb_rating = data.get('imdbRating') or None
+        tomatoes = data.get('tomatoRating') or None
+        poster_url = data.get('Poster') or None
+        year = data.get('Year') or None
+        plot = data.get('Plot') or None
+        genre = data.get('Genre') or None
+        awards = data.get('Awards') or None
+        actors = data.get('Actors') or None
+        director = data.get('Director') or None
+        writer = data.get('Writer') or None
+        language = data.get('Language') or None
+        country = data.get('Country') or None
+        runtime = data.get('Runtime') or None
 
         movie = Movie(title=title,
                       release_date=release_date,
+                      avg_rating=avg_rating,
                       imdb_url=imdb_url,
                       imdb_rating=imdb_rating,
                       tomatoes=tomatoes,

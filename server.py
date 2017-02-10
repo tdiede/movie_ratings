@@ -110,6 +110,32 @@ def current_profile():
     return redirect("/users/%s" % user_id)
 
 
+@app.route('/correlation', methods=['GET'])
+def select_correlation():
+    """Select users to show correlation."""
+
+    users = User.query.all()
+    return render_template("correlation.html", users=users, user=None, correlation=None)
+
+
+@app.route('/correlation', methods=['POST'])
+def compare_ratings():
+    """Show how your ratings compare to another user's."""
+
+    # Get form variables.
+    userid1 = request.form['userid1']
+    userid2 = request.form['userid2']
+
+    user1 = User.query.get(userid1)
+    user2 = User.query.get(userid2)
+
+    correlation = user1.similarity(user2)
+
+    users = User.query.all()
+
+    return render_template("correlation.html", users=users, user1=user1, user2=user2, correlation=correlation)
+
+
 @app.route('/movies')
 def movie_list():
     """Show list of movies."""

@@ -88,6 +88,7 @@ class Movie(db.Model):
 
     title = db.Column(db.String(128))
     release_date = db.Column(db.DateTime)
+    avg_rating = db.Column(db.String(4))
     imdb_url = db.Column(db.String(256))
     imdb_rating = db.Column(db.String(4))
     tomatoes = db.Column(db.String(4))
