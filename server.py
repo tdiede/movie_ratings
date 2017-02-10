@@ -5,7 +5,6 @@ import os
 from jinja2 import StrictUndefined
 
 from flask import (Flask, render_template, request, flash, redirect, session, jsonify)
-from flask_debugtoolbar import DebugToolbarExtension
 
 from model import connect_to_db, db
 from model import (User, Movie, Rating)
@@ -297,8 +296,8 @@ def get_movie_info(movie_id):
 
 if __name__ == "__main__":
 
-    from flask_debugtoolbar import DebugToolbarExtension
-    DebugToolbarExtension(app)
+    # from flask_debugtoolbar import DebugToolbarExtension
+    # DebugToolbarExtension(app)
 
     # import doctest
     # result = doctest.testmod()
