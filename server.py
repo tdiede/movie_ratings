@@ -292,6 +292,37 @@ def get_movie_info(movie_id):
     return jsonify(movie_info)
 
 
+@app.route('/graph.json')
+def make_graph():
+    """Produces a graph data file with nodes and links."""
+
+    users = User.query.all()
+
+    graph = {}
+    nodes = []
+    links = []
+    graph['nodes'] = nodes
+    graph['links'] = links
+
+    for user in users:
+        node = {}
+        node['user'] = user.user_id
+        # node['group'] = user.avg_rating
+        nodes.append(node)
+        print node
+        for other in users:
+            if other != user:
+                link = {}
+                link['source'] = user.user_id
+                link['target'] = other.user_id
+                link['weight'] = user.similarity(other)
+                links.append(link)
+                print link
+
+    return jsonify(graph)
+
+
+
 ################################################################################
 
 if __name__ == "__main__":
