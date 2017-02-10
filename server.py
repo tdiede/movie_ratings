@@ -11,6 +11,7 @@ from model import (User, Movie, Rating)
 
 import requests
 import json
+import csv
 
 
 app = Flask(__name__)
@@ -296,7 +297,8 @@ def get_movie_info(movie_id):
 def make_graph():
     """Produces a graph data file with nodes and links."""
 
-    users = User.query.all()
+    all_users = User.query.all()
+    users = segment_users(all_users)
 
     graph = {}
     nodes = []
@@ -321,6 +323,51 @@ def make_graph():
 
     return jsonify(graph)
 
+
+def avg_rating(user):
+
+    # Get average rating of all movies by a user.
+    rating_scores = [r.score for r in user.ratings]
+    average = float(sum(rating_scores)) / len(rating_scores)
+    return average
+
+
+def segment_users(users):
+
+    segmented_users = []
+
+    for user in users:
+        if len(user.ratings) > 0:
+            segmented_users.append(user)
+
+    return segmented_users
+
+
+@app.route('/correlogram.csv')
+def make_correlogram():
+    """Produces a table of all users and their correlations."""
+
+    all_users = User.query.all()
+    users = segment_users(all_users)
+
+    matrix = []
+    first_row = []
+    first_row.append("")
+    matrix.append(first_row)
+
+    for user in users:
+        # creates column labels by user_id
+        first_row.append(str(user.user_id))
+        subsequent_row = []
+        subsequent_row.append(str(user.user_id))
+        for other in users:
+            correlation_value = user.similarity(other)
+            subsequent_row.append(correlation_value)
+        matrix.append(subsequent_row)
+
+    with open("correlogram.csv", "wb") as f:
+        writer = csv.writer(f)
+        writer.writerows(matrix)
 
 
 ################################################################################
