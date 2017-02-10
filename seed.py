@@ -198,8 +198,8 @@ if __name__ == "__main__":
     db.create_all()
 
     # Import data tables and set val user_id as next possible number.
-    # load_users()
-    # load_movies()
+    load_users()
+    load_movies()
     load_ratings()
     set_val_user_id()
 
