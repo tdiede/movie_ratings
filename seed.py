@@ -15,9 +15,9 @@ import os
 
 # Whenever seeding,
 # drop existing database and create a new database.
-# os.system("dropdb ratings")
+os.system("dropdb strangerratings")
 print "dropdb ratings"
-# os.system("createdb ratings")
+os.system("createdb strangerratings")
 print "createdb ratings"
 
 

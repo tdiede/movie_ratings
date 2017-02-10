@@ -1,5 +1,7 @@
 """Movie Ratings."""
 
+import os
+
 from jinja2 import StrictUndefined
 
 from flask import (Flask, render_template, request, flash, redirect, session, jsonify)
@@ -294,15 +296,19 @@ def get_movie_info(movie_id):
 ################################################################################
 
 if __name__ == "__main__":
-    # We have to set debug=True here, since it has to be True at the
-    # point that we invoke the DebugToolbarExtension
-    app.debug = True
 
-    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-
-    connect_to_db(app)
-
-    # Use the DebugToolbar
+    from flask_debugtoolbar import DebugToolbarExtension
     DebugToolbarExtension(app)
 
-    app.run(host='0.0.0.0')
+    # import doctest
+    # result = doctest.testmod()
+    # if not result.failed:
+    #     print "ALL TESTS PASSED. GOOD WORK!"
+
+    connect_to_db(app, os.environ.get("DATABASE_URL"))
+    db.create_all()
+
+    DEBUG = "NO_DEBUG" not in os.environ
+    PORT = int(os.environ.get("PORT", 5000))
+
+    app.run(host="0.0.0.0", port=PORT, debug=DEBUG)
