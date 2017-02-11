@@ -148,7 +148,7 @@ def load_ratings():
     Rating.query.delete()
 
     # Read u.user file and insert data
-    for i, row in enumerate(open("seed_data/u.data")):
+    for i, row in enumerate(open("seed_data/u.data2")):
         row = row.rstrip()
         user_id, movie_id, score, timestamp = row.split("\t")
 
@@ -194,12 +194,12 @@ if __name__ == "__main__":
     connect_to_db(app, os.environ.get("DATABASE_URL"))
 
     # In case tables haven't been created, create them.
-    db.drop_all()
+    # db.drop_all()
     db.create_all()
 
     # Import data tables and set val user_id as next possible number.
-    load_users()
-    load_movies()
+    # load_users()
+    # load_movies()
     load_ratings()
     set_val_user_id()
 
