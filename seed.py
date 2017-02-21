@@ -15,9 +15,9 @@ import os
 
 # Whenever seeding,
 # drop existing database and create a new database.
-# os.system("dropdb strangerratings")
+os.system("dropdb strangerratings")
 print "dropdb ratings"
-# os.system("createdb strangerratings")
+os.system("createdb strangerratings")
 print "createdb ratings"
 
 
@@ -76,13 +76,12 @@ def load_movies():
         avg_rating = None
 
         # # call to OMDB API
-        # r = omdb.get_movie_info(title,release_date)
-        # if r.status_code != 200:
-        #     continue
+        r = omdb.get_movie_info(title,release_date)
+        if r.status_code != 200:
+            continue
 
         # # Content of Response object as dict.
-        # data = r.json()
-        data = {}
+        data = r.json() or {}
 
         imdb_rating = data.get('imdbRating') or None
         tomatoes = data.get('tomatoRating') or None
@@ -194,12 +193,12 @@ if __name__ == "__main__":
     connect_to_db(app, os.environ.get("DATABASE_URL"))
 
     # In case tables haven't been created, create them.
-    # db.drop_all()
+    db.drop_all()
     db.create_all()
 
     # Import data tables and set val user_id as next possible number.
-    # load_users()
-    # load_movies()
+    load_users()
+    load_movies()
     load_ratings()
     set_val_user_id()
 
