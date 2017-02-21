@@ -76,9 +76,9 @@ def load_movies():
         avg_rating = None
 
         # # call to OMDB API
-        r = omdb.get_movie_info(title,release_date)
-        if r.status_code != 200:
-            continue
+        # r = omdb.get_movie_info(title,release_date)
+        # if r.status_code != 200:
+        #     continue
 
         # # Content of Response object as dict.
         data = r.json() or {}
