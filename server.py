@@ -293,12 +293,12 @@ def get_movie_info(movie_id):
     return jsonify(movie_info)
 
 
-@app.route('/graph.json')
-def make_graph():
+@app.route('/graph.json/<int:movie_limit>')
+def make_graph(movie_limit):
     """Produces a graph data file with nodes and links."""
 
     all_users = User.query.all()
-    users = segment_users(all_users)
+    users = segment_users(all_users,movie_limit)
 
     graph = {}
     nodes = []
@@ -324,28 +324,19 @@ def make_graph():
     return jsonify(graph)
 
 
-def avg_rating(user):
-
-    # Get average rating of all movies by a user.
-    rating_scores = [r.score for r in user.ratings]
-    average = float(sum(rating_scores)) / len(rating_scores)
-    return average
-
-
-def segment_users(users):
+def segment_users(users,movie_limit=100):
+    """Return a portion of all users based on how many movies user has rated."""
 
     segmented_users = []
-
     for user in users:
-        if len(user.ratings) > 0:
+        if len(user.ratings) > movie_limit:
             segmented_users.append(user)
-
     return segmented_users
 
 
 @app.route('/correlogram.csv')
 def make_correlogram():
-    """Produces a table of all users and their correlations."""
+    """Produces a table of all users and their correlations to other users."""
 
     all_users = User.query.all()
     users = segment_users(all_users)

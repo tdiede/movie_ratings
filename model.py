@@ -76,6 +76,12 @@ class User(db.Model):
         else:
             return 0.0
 
+    def avg_rating(self):
+        """Get average rating of all movies by a user."""
+        rating_scores = [r.score for r in self.ratings]
+        avg_rating = float(sum(rating_scores)) / len(rating_scores)
+        return avg_rating
+
 
 class Movie(db.Model):
     """Movie to be rated."""
