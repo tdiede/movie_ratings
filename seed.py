@@ -81,7 +81,8 @@ def load_movies():
         #     continue
 
         # # Content of Response object as dict.
-        data = r.json() or {}
+        # data = r.json()
+        data = {}
 
         imdb_rating = data.get('imdbRating') or None
         tomatoes = data.get('tomatoRating') or None
