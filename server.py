@@ -4,7 +4,7 @@ import os
 
 from jinja2 import StrictUndefined
 
-from flask import (Flask, render_template, request, flash, redirect, session, jsonify)
+from flask import (Flask, render_template, request, flash, redirect, session, jsonify, Response)
 
 from model import connect_to_db, db
 from model import (User, Movie, Rating)
@@ -12,6 +12,9 @@ from model import (User, Movie, Rating)
 import requests
 import json
 import csv
+import pandas
+
+import time
 
 
 app = Flask(__name__)
@@ -116,8 +119,33 @@ def current_profile():
 def select_correlation():
     """Select users to show correlation."""
 
-    users = User.query.all()
-    return render_template("correlation.html", users=users, user=None, correlation=None)
+    return render_template("correlation.html")
+
+
+#   def generate():
+#         yield 'waiting 5 seconds\n'
+
+#         for i in range(1, 101):
+#             time.sleep(0.05)
+
+#             if i % 10 == 0:
+#                 yield '{}%\n'.format(i)
+
+#         yield 'done\n'
+
+#     return Response(generate(), mimetype='text/plain')
+
+# @app.route('/correlationD3', methods=['POST'])
+# def correlationD3():
+#     """Show D3 correlogram of selected range of users."""
+
+#     movie_limit = int(request.form['movielimit'])
+
+#     all_users = User.query.all()
+#     users = segment_users(all_users,movie_limit)
+
+#     data = make_correlogram(users)
+#     return render_template("correlation.html", users=users, data=data, correlation=None)
 
 
 @app.route('/correlation', methods=['POST'])
@@ -324,7 +352,7 @@ def make_graph(movie_limit):
     return jsonify(graph)
 
 
-def segment_users(users,movie_limit=100):
+def segment_users(users,movie_limit=500):
     """Return a portion of all users based on how many movies user has rated."""
 
     segmented_users = []
@@ -334,9 +362,17 @@ def segment_users(users,movie_limit=100):
     return segmented_users
 
 
-@app.route('/correlogram.csv')
+@app.route("/data")
+def csv_data():
+    csv_data = make_correlogram()
+    return csv_data
+
+
+# @app.route('/correlogram.csv', methods=['POST'])
 def make_correlogram():
     """Produces a table of all users and their correlations to other users."""
+
+    # movie_limit = request.form['movielimit']
 
     all_users = User.query.all()
     users = segment_users(all_users)
@@ -348,17 +384,27 @@ def make_correlogram():
 
     for user in users:
         # creates column labels by user_id
-        first_row.append(str(user.user_id))
+        first_row.append('User No. '+str(user.user_id))
         subsequent_row = []
-        subsequent_row.append(str(user.user_id))
+        subsequent_row.append('User No. '+str(user.user_id))
         for other in users:
-            correlation_value = user.similarity(other)
+            correlation_value = float(user.similarity(other))
             subsequent_row.append(correlation_value)
         matrix.append(subsequent_row)
 
-    with open("correlogram.csv", "wb") as f:
-        writer = csv.writer(f)
-        writer.writerows(matrix)
+    df = pandas.DataFrame(matrix)
+    return df.to_csv()
+
+    # # to interactively save a csv file
+    # def generate_csv():
+    #     for user in users:
+    #         yield ','.join(user) + '\n'
+    # return Response(generate_csv(), mimetype='text/csv')
+
+    # write to csv file
+    # with open("static/data/correlogram.csv", "wb") as f:
+    #     writer = csv.writer(f)
+    #     writer.writerows(matrix)
 
 
 ################################################################################

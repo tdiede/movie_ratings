@@ -148,7 +148,7 @@ def load_ratings():
     Rating.query.delete()
 
     # Read u.user file and insert data
-    for i, row in enumerate(open("seed_data/u.data2")):
+    for i, row in enumerate(open("seed_data/u.data_deployed")):
         row = row.rstrip()
         user_id, movie_id, score, timestamp = row.split("\t")
 
