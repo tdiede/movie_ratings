@@ -208,7 +208,7 @@
 
 <script type="text/javascript">
 
-  const prediction = {{ prediction|safe }};
+  const prediction = {{ prediction | safe }} or null;
   console.log(prediction);
 
   $("#no").hide();
