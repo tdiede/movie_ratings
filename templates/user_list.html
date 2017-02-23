@@ -2,7 +2,7 @@
 {% block content %}
 
 <!-- <h2>Users</h2> -->
-<h4>USERS | <span class="subtitle"> There are {{ num_users }} users who are rating movies on this app. All names fictiously generated using
+<h4>USERS | <span class="subtitle"> There are {{ users | length }} users who are rating movies on this app. All names fictiously generated using
     <a target="_blank" href="https://github.com/muffinista/namey"> an API called 'namey'</a>.</span></h4>
 
 
@@ -20,7 +20,7 @@
 
 <script type="text/javascript">
 
-    const numUsers = {{ num_users|safe }}
+    const numUsers = {{ users | length | safe }}
     console.log(numUsers);
 
     const max = 5;

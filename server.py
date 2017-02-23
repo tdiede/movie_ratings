@@ -13,8 +13,6 @@ import requests
 import json
 import csv
 
-from operator import itemgetter
-
 
 app = Flask(__name__)
 
@@ -93,8 +91,7 @@ def user_list():
     """Show list of users."""
 
     users = User.query.all()
-    num_users = len(users)
-    return render_template("user_list.html", users=users, num_users=num_users)
+    return render_template("user_list.html", users=users)
 
 
 @app.route('/users/<int:user_id>')
@@ -152,34 +149,12 @@ def compare_ratings():
     return redirect("/correlation/%s&%s" % (userid1,userid2))
 
 
-# @app.route('/correlogram')
-# def correlationD3():
-#     """Show D3 correlogram of selected range of users."""
-
-#     movie_limit = int(request.form['movielimit'])
-
-#     all_users = User.query.all()
-#     users = segment_users(all_users,movie_limit)
-
-#     data = make_correlogram(users)
-#     return render_template("correlation.html", users=users, data=data, correlation=None)
-
-
 @app.route('/movies')
 def movie_list():
     """Show list of movies."""
 
     movies = Movie.query.order_by('title').all()
-    num_movies = len(movies)
-
-    average_ratings = {}
-    for movie in movies:
-        # Get average rating of movie.
-        rating_scores = [r.score for r in movie.ratings]
-        avg_rating = float(sum(rating_scores)) / len(rating_scores)
-        average_ratings[movie.movie_id] = round(avg_rating,2)
-
-    return render_template("movie_list.html", movies=movies, num_movies=num_movies, average_ratings=average_ratings)
+    return render_template("movie_list.html", movies=movies)
 
 
 @app.route('/movies/<int:movie_id>', methods=['GET'])
@@ -294,7 +269,7 @@ def rate_movie(movie_id):
     return redirect("/movies/%s" % movie_id)
 
 
-# HELPER FUNCTION # JSON ROUTE #
+# JSON and CSV ROUTES #
 @app.route('/movie_info.json/<int:movie_id>')
 def get_movie_info(movie_id):
     """Uses the API (KEY=http://img.omdbapi.com/?i=tt2294629&apikey=7c9afab3) to fetch movie data."""
@@ -351,16 +326,6 @@ def make_graph(movie_limit):
     return jsonify(graph)
 
 
-def segment_users(users,movie_limit=500):
-    """Return a portion of all users based on how many movies user has rated."""
-
-    segmented_users = []
-    for user in users:
-        if len(user.ratings) > movie_limit:
-            segmented_users.append(user)
-    return segmented_users
-
-
 @app.route("/data")
 def csv_data():
     csv_data = make_correlogram()
@@ -404,6 +369,33 @@ def make_correlogram():
     # with open("static/data/correlogram.csv", "wb") as f:
     #     writer = csv.writer(f)
     #     writer.writerows(matrix)
+
+
+# HELPER FUNCTIONS #
+def segment_users(users,movie_limit=500):
+    """Return a portion of all users based on how many movies user has rated."""
+
+    segmented_users = []
+    for user in users:
+        if len(user.ratings) > movie_limit:
+            segmented_users.append(user)
+    return segmented_users
+
+@app.route("/update_avg_ratings")
+def update_avg_ratings():
+    """Get average rating for each movie and update value in database, movies table."""
+
+    movies = Movie.query.all()
+
+    for movie in movies:
+        # Get average rating of movie.
+        rating_scores = [r.score for r in movie.ratings]
+        avg_rating = float(sum(rating_scores)) / len(rating_scores)
+        update_value = round(avg_rating, 2)
+        movie_updated = Movie.query.filter_by(movie_id=movie.movie_id).update(dict(avg_rating=update_value))
+        db.session.commit()
+
+    return redirect("/movies")
 
 
 ################################################################################

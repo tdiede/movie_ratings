@@ -72,7 +72,7 @@ def load_movies():
         else:
             release_date = None
 
-        # to be calculated later...
+        # to be calculated later on the server (daily update)...
         avg_rating = None
 
         # # call to OMDB API
