@@ -9,9 +9,9 @@ from flask import (Flask, render_template, request, flash, redirect, session, js
 from model import connect_to_db, db
 from model import (User, Movie, Rating)
 
+from sqlalchemy import distinct
+
 import requests
-import urllib
-import urllib2
 import json
 import csv
 
@@ -155,7 +155,7 @@ def compare_ratings():
 def movie_list():
     """Show list of movies."""
 
-    movies = Movie.query.order_by('title').all()
+    movies = Movie.query.order_by('title').distinct('title').all()
     return render_template("movie_list.html", movies=movies)
 
 
@@ -172,9 +172,9 @@ def movie_detail(movie_id):
     else:
         user_rating = None
 
-    # Get average rating of movie.
-    rating_scores = [r.score for r in movie.ratings]
-    average = float(sum(rating_scores)) / len(rating_scores)
+    # # Get average rating of movie.
+    # rating_scores = [r.score for r in movie.ratings]
+    # average = float(sum(rating_scores)) / len(rating_scores)
 
     prediction = None
 
@@ -239,7 +239,7 @@ def movie_detail(movie_id):
     return render_template("movie.html",
                            movie=movie,
                            user_rating=user_rating,
-                           average=average,
+                           # average=average,
                            prediction=prediction,
                            eye_rating=eye_rating,
                            difference=difference,
@@ -400,6 +400,7 @@ def update_avg_ratings():
             avg_rating = float(sum(rating_scores)) / len(rating_scores)
             update_value = round(avg_rating, 2)
             movie_updated = Movie.query.filter_by(movie_id=movie.movie_id).update(dict(avg_rating=update_value))
+            print update_value
 
     db.session.commit()
 
