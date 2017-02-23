@@ -15,10 +15,10 @@ import os
 
 # Whenever seeding,
 # drop existing database and create a new database.
-os.system("dropdb strangerratings")
-print "dropdb ratings"
-os.system("createdb strangerratings")
-print "createdb ratings"
+# os.system("dropdb strangerratings")
+# print "dropdb ratings"
+# os.system("createdb strangerratings")
+# print "createdb ratings"
 
 
 def load_users():
