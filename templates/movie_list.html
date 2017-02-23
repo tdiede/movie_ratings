@@ -14,7 +14,7 @@
 <ul class="movies">
 {% for movie in movies %}
 {% if movie.title %}
-<li id="{{ movie.movie_id }}"><i class="fa fa-film"></i><a class="movie-title" href="movies/{{ movie.movie_id }}"> {{ movie.title }} </a><span class="avg-rating">{{ movie.avg_rating }}</span></li>
+<li id="{{ movie.movie_id }}"><i class="fa fa-film"></i><a class="movie-title" href="movies/{{ movie.movie_id }}"> {{ movie.title }} </a><span class="avg-rating"> {% if movie.avg_rating %} {{ movie.avg_rating }} {% else %} no ratings {% endif %} </span></li>
 {% endif %}
 {% endfor %}
 </ul>

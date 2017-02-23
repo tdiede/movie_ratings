@@ -10,6 +10,8 @@ from model import connect_to_db, db
 from model import (User, Movie, Rating)
 
 import requests
+import urllib
+import urllib2
 import json
 import csv
 
@@ -228,8 +230,11 @@ def movie_detail(movie_id):
         beratement = None
 
     # visual display (call to OMDB API)
-    response = get_movie_info(movie_id)
-    data = json.loads(response.data)
+    r = get_movie_info(movie_id)
+    data = json.loads(r.content)
+
+    if data['Response'] == 'False':
+        data = None
 
     return render_template("movie.html",
                            movie=movie,
@@ -283,16 +288,17 @@ def get_movie_info(movie_id):
     data['r'] = 'json'
 
     payload = 't='+data['t']+'&y='+data['y']+'&plot=full&r=json'
-    url = 'http://www.omdbapi.com/?'
+    BASE_API = 'http://www.omdbapi.com/?'
 
     # Response object.
-    r = requests.get(url+payload)
+    r = requests.get(BASE_API+payload)
+    return r
 
     # Content of Response object as dict.
-    movie_info = r.json()
+    # movie_info = r.json()
 
     # Send as json/dict.
-    return jsonify(movie_info)
+    # return jsonify(movie_info)
 
 
 @app.route('/graph.json/<int:movie_limit>')
@@ -393,7 +399,8 @@ def update_avg_ratings():
         avg_rating = float(sum(rating_scores)) / len(rating_scores)
         update_value = round(avg_rating, 2)
         movie_updated = Movie.query.filter_by(movie_id=movie.movie_id).update(dict(avg_rating=update_value))
-        db.session.commit()
+
+    db.session.commit()
 
     return redirect("/movies")
 

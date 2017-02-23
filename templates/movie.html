@@ -8,6 +8,10 @@
 <hr class="blur">
 <br>
 
+{% if not data %}
+<h4>MOVIE NOT FOUND IN OMDB DATABASE</h4>
+
+{% else %}
 <!-- ABOUT THIS MOVIE -->
 <div class="row">
 
@@ -87,6 +91,9 @@
   </div>
 
 </div>
+{% endif %}
+
+
 
 <br>
 
@@ -97,7 +104,10 @@
 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 
 <!-- HOW YOU RATE THIS MOVIE -->
-{% if "user_id" in session %}
+{% if "user_id" not in session %}
+<h4>SIGN IN TO RATE THIS MOVIE</h4>
+
+{% else %}
 <!-- <hr class="blur"> -->
 <h4>YOUR OPINION | <span class="subtitle"> How do you rate <span class="movie movie-title">{{ movie.title}}</span> ?</span></h4>
 <hr class="blur">
@@ -139,10 +149,12 @@
 <hr class="blur">
 
 <div id="other-data">
+{% if data %}
 {% if data.imdbRating %}
 <h6 class="inline-text">IMDB RATING (out of 10) </h6>
 <span class="data"> {{ data.imdbRating }}</span>
 <br>
+{% endif %}
 {% endif %}
 <h6 class="inline-text">AVERAGE RATING (on this site) </h6>
 <span class="data"> {{ '%.1f' | format(average) }}</span>
