@@ -396,9 +396,10 @@ def update_avg_ratings():
     for movie in movies:
         # Get average rating of movie.
         rating_scores = [r.score for r in movie.ratings]
-        avg_rating = float(sum(rating_scores)) / len(rating_scores)
-        update_value = round(avg_rating, 2)
-        movie_updated = Movie.query.filter_by(movie_id=movie.movie_id).update(dict(avg_rating=update_value))
+        if rating_scores:
+            avg_rating = float(sum(rating_scores)) / len(rating_scores)
+            update_value = round(avg_rating, 2)
+            movie_updated = Movie.query.filter_by(movie_id=movie.movie_id).update(dict(avg_rating=update_value))
 
     db.session.commit()
 
