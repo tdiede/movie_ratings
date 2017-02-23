@@ -76,6 +76,22 @@ class User(db.Model):
         else:
             return 0.0
 
+    def shared_movies(self, other):
+        """Returns dictionary of shared movies and each user rating."""
+
+        u_ratings = {}
+        shared_movies = {}
+
+        for r in self.ratings:
+            u_ratings[r.movie_id] = r
+
+        for r in other.ratings:
+            u_r = u_ratings.get(r.movie_id)
+            if u_r:
+                shared_movies[r.movie_id] = (u_r.score, r.score)
+
+        return shared_movies
+
     def avg_rating(self):
         """Get average rating of all movies by a user."""
         rating_scores = [r.score for r in self.ratings]

@@ -84,19 +84,19 @@ def load_movies():
         # data = r.json()
         data = {}
 
-        imdb_rating = data.get('imdbRating') or None
-        tomatoes = data.get('tomatoRating') or None
-        poster_url = data.get('Poster') or None
-        year = data.get('Year') or None
-        plot = data.get('Plot') or None
-        genre = data.get('Genre') or None
-        awards = data.get('Awards') or None
-        actors = data.get('Actors') or None
-        director = data.get('Director') or None
-        writer = data.get('Writer') or None
-        language = data.get('Language') or None
-        country = data.get('Country') or None
-        runtime = data.get('Runtime') or None
+        imdb_rating = data.get('imdbRating', None)
+        tomatoes = data.get('tomatoRating', None)
+        poster_url = data.get('Poster', None)
+        year = data.get('Year', None)
+        plot = data.get('Plot', None)
+        genre = data.get('Genre', None)
+        awards = data.get('Awards', None)
+        actors = data.get('Actors', None)
+        director = data.get('Director', None)
+        writer = data.get('Writer', None)
+        language = data.get('Language', None)
+        country = data.get('Country', None)
+        runtime = data.get('Runtime', None)
 
         movie = Movie(title=title,
                       release_date=release_date,

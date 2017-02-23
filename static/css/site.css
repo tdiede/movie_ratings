@@ -10,6 +10,16 @@ body {
 .navbar-form {
   border: none;
 }
+.form-center {
+  margin: 0 auto;
+  text-align: center;
+}
+select {
+  margin: 10px;
+}
+.modal.in .modal-dialog {
+  transform: translate(0,50%);
+}
 
 .intro {
   max-width: 50%;
@@ -163,7 +173,19 @@ span.avg-rating {
   font-weight: bold;
   font-style: normal;
 }
-
+span.highlight {
+  color: black;
+  font-weight: bold;
+}
+span.correlation-result {
+  color: tomato;
+  font-size: 14pt;
+  font-weight: bold;
+  font-style: normal;
+}
+span.correlation-result:hover {
+  text-decoration: underline;
+}
 
 
 img#movie-poster {
@@ -201,6 +223,34 @@ h4.inline-text, h6.inline-text {
 }
 p.inline-text {
   max-width: 300px;
+}
+div#pre-correlate {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+div#correlation-details {
+  /*max-width: 300px;*/
+  height: 150px;
+  vertical-align: middle;
+}
+div.correlation-minis {
+  padding: 15px;
+  margin: 15px 0;
+  min-height: max-content;
+  background-color: rgba(255,255,255,0.7);
+  box-shadow: -2px 0 20px rgba(0,0,0,0.2);
+  border-radius: 7px;
+}
+div#usersmovieratings {
+  text-align: center;
+}
+div#correlation-movies {
+  overflow-y: scroll;
+  max-height: 450px;
+  padding: 30px 0;
+  border-top: 1px solid #333333;
+  border-bottom: 1px solid #333333;
 }
 
 

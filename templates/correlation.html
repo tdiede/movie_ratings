@@ -3,165 +3,172 @@
 
 <!-- <h2>Correlation</h2> -->
 
-<h4>CORRELATION | <span class="subtitle"> Select 2 users to calculate their similarity:</span></h4>
+<h4>PEARSON CORRELATION | <span class="subtitle"> Explore the similarity in movie preferences between two users.</span></h4>
 
 
 <hr class="blur">
 
 
-<form class="navbar-form navbar-left" action="/correlogram.csv" method="POST">
-    <label>correlate only users who have rated __+ movies:</label>
-    <input type="number" name="movielimit" min="0" max="500" placeholder="0-500">
-    <button type="submit" class="btn" name="submit">CORRELATE</button>
-</form>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">PEARSON CORRELATION: How similar are two users in their movie ratings?</h4>
+      </div>
+      <div class="modal-body">
+        <p>Select the record IDs of two users to calculate their Pearson correlation.</p>
+      
+                <form class="navbar-form form-center" action="/correlation" method="POST">
+
+                    <label for="userid1">User 1</label>
+                    <select name="userid1" id="userid1">
+                        {% for user in users %}
+                        <option value="{{ user.user_id }}">{{ user.user_id }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="userid2">User 2</label>
+                    <select name="userid2" id="userid2">
+                        {% for user in users %}
+                        <option value="{{ user.user_id }}">{{ user.user_id }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <button type="submit" class="btn" name="submit">CORRELATE</button>
+                </form>
+      </div>
+      <div class="modal-footer">
+        <p>Your record ID is {{ session.get('user_id') }}.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="row">
+<div id="pre-correlate">
+    <div class="col-md-6">
+    <!-- Trigger the modal with a button -->
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">SELECT 2 USERS</button>
+    </div>
+</div>
+</div>
+
+{% if data %}
+<div class="row">
+<div id="correlation-details">
 
 
+            <div class="col-md-6">
+                <div class="correlation-minis">
+                    <h4 class="inline-text">CORRELATION
+                    {% if correlation %}
+                        <span class="correlation-result"> {{ '%.1f' | format(correlation) }} </span>
+                    BETWEEN <span class="correlation-result">User {{ user1.user_id }}</span>
+                    AND <span class="correlation-result">User {{ user2.user_id }}</span>
+                    {% endif %}
+                    </h4>
+                    <br>
+                    <p> based on <span class="highlight">{{ data | length }}</span> movies in common</p>
+                    <p> 🗝  = <span class="correlation-result"> same rating</span></p>
+                    <p> note: correlation will be 1.0 if users are the same user </p>
+                </div>
+            </div>
 
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<style>
-svg {
-  font: 12px sans-serif;
-  text-anchor: middle;
-}
+            <div class="col-md-4">
+                <div class="correlation-minis" id="usersmovieratings">
+                    <h4 class="inline-text">MOVIE
+                        <span class="correlation-result" id="movietitle"></span>
+                    </h4>
+                    <br>
+                    <h4>User {{ user1.user_id }} <span class="correlation-result" id="user1movierating"></span></h4>
+                    <h4>User {{ user2.user_id }} <span class="correlation-result" id="user2movierating"></span></h4>
+                </div>
+            </div>
 
-rect {
-  stroke: lightgray;
-  stoke-width: 1px;
-  fill: none;
-}
+            <div class="col-md-2">
+                <div class="correlation-minis">
+                    <h4 class="inline-text">DIFFERENCE IN USER RATINGS
+                        <span class="correlation-result" id="ratingdifference"></span>
+                    </h4>
+                    {% if user1.user_id == user2.user_id %}
+                    <br>
+                    <br>
+                    <p> *same user! </p>
+                    {% endif %}
+                </div>
+            </div>
 
-.y.axis path{
-  fill: none;
-  stroke: none;
-}
+</div>
+</div>
 
-</style>
-<script>
+<div class="row">
+<div id="correlation-movies">
 
-$(document).ready(function() {
+<ul class="users">
+{% for rating in data %}
 
-    let winWidth = $(window).width();
-
-
-
-    d3.csv("/data", function(error, rows) {
-        if (error) throw error;
-
-        console.table(rows);
-
-        const data = [];
-        console.log(data);
-        console.log(data.length);
-
-        rows.forEach(function(d) {
-            let x = d[""];
-            console.log('x = ' + x);
-            delete d[""];
-            for (prop in d) {
-                let y = prop;
-                console.log('y - ' +y);
-                console.log('value'+d[prop]);
-                let value = d[prop];
-                data.push({
-                    x: x,
-                    y: y,
-                    value: +value
-                    });
-                }
-                console.log(data);
-            });
-
-        const margin = {top: 25,right: 80,bottom: 25,left: 25},
-              width = 800 - margin.left - margin.right,
-              height = 800 - margin.top - margin.bottom;
-
-        let domain = d3.set(data.map(function(d) { return d.x })).values(),
-            num = Math.sqrt(data.length);
-
-        let color = d3.scaleLinear().domain([-1, 0, 1]).range(["#B22324", "#F280A0", "#000080"]);
-        let x = d3.scaleOrdinal().range([0, width]).domain(domain),
-            y = d3.scaleOrdinal().range([0, height]).domain(domain),
-            xSpace = x.range()[1] - x.range()[0],
-            ySpace = y.range()[1] - y.range()[0];
-
-        svg = d3.select("body")
-            .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        let correlation = svg.selectAll(".correlation")
-            .data(data)
-            .enter()
-            .append("g")
-            .attr("class", "correlation")
-            .attr("transform", function(d) {
-                return "translate(" + x(d.x) + "," + y(d.y) + ")";
-            });
+<li id="{{ rating[0].movie_id }}" onmouseover="showRatings({ 'movietitle': '{{ rating[0].title }}',
+                                                             'user1movierating': {{ rating[1][0] }},
+                                                             'user2movierating': {{ rating[1][1] }},
+                                                             'ratingdifference': {{ (rating[1][0]-rating[1][1])|abs }} })">
+    <i class="fa fa-film"></i>
+    <a class="movie-title" href="../movies/{{ rating[0].movie_id }}"> {{ rating[0].title }} </a>
+    
+        {% if (rating[1][0]-rating[1][1])|abs == 0 %}
+            <span> 🗝  = <span class="avg-rating"> {{ rating[1][0] }} </span></span>
+        {% endif %}
         
-        correlation.append("rect")
-            .attr("width", xSpace)
-            .attr("height", ySpace)
-            .attr("x", -xSpace / 2)
-            .attr("y", -ySpace / 2)
+</li>
+<br>
 
-        correlation.filter(function(d){
-            let ypos = domain.indexOf(d.y);
-            let xpos = domain.indexOf(d.x);
-            for (let i = (ypos + 1); i < num; i++){ if (i === xpos) return false; }
-                return true;
-            })
-            .append("text")
-            .attr("y", 5)
-            .text(function(d) { if (d.x === d.y) { return d.x; } else { return d.value.toFixed(2); }
-            })
-            .style("fill", function(d){ if (d.value === 1) { return "#000"; } else { return color(d.value); }
-            });
+{% endfor %}
+</ul>
 
-        correlation.filter(function(d){
-            let ypos = domain.indexOf(d.y);
-            let xpos = domain.indexOf(d.x);
-            for (var i = (ypos + 1); i < num; i++){
-                if (i === xpos) return true;
-            }
-            return false;
-            })
-            .append("circle")
-            .attr("r", (width / (num * 2) - 5))
-            .style("fill", function(d){
-                if (d.value === 1) { return "#000"; } else {
-            return color(d.value);
-            }
-            });
+</div>
+</div>
+{% endif %}
 
-        let aS = d3.scaleLinear().range([-margin.top + 5, height + margin.bottom - 5]).domain([1, -1]);
 
-        let yA = d3.axisRight()
-            .scale(aS)
-            .tickPadding(7);
+<script type="text/javascript">
 
-        let aG = svg.append("g")
-            .attr("class", "y axis")
-            .call(yA)
-            .attr("transform", "translate(" + (width + margin.right / 2) + " ,0)")
+    $("#usersmovieratings").hide();
 
-        let iR = d3.range(-1, 1.01, 0.01);
-        let h = height / iR.length + 3;
-        iR.forEach(function(d){
-            aG.append('rect')
-                .style('fill',color(d))
-                .style('stroke-width', 0)
-                .style('stoke', 'none')
-                .attr('height', h)
-                .attr('width', 10)
-                .attr('x', 0)
-                .attr('y', aS(d))
-            });
-        });
+    function showRatings(data) {
+        // console.log(data);
+        let user1movierating = convertStars(data['user1movierating']);
+        let user2movierating = convertStars(data['user2movierating']);
+        $("#usersmovieratings").show();
+        $("#movietitle").html(data['movietitle']);
+        $("#user1movierating").html(user1movierating);
+        $("#user2movierating").html(user2movierating);
+        $("#ratingdifference").html(data['ratingdifference']);
+    }
+
+    function convertStars(number) {
+        let stars = '';
+        for (let i=0; i<number; i++) {
+            stars += '&#x2605'
+        }
+        return stars;
+    }
+
+    // function hideRatings() {
+    //     $("#movietitle").html(``);
+    //     $("#user1movierating").html(``);
+    //     $("#user2movierating").html(``);
+    //     $("#difference").html(``);
+    // }
+
+    $(document).ready({
+        if(data) { showRatings(data) }
     });
 
-  </script>
+</script>
 
 
 {% endblock %}

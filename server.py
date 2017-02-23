@@ -14,7 +14,7 @@ import json
 import csv
 import pandas
 
-import time
+from operator import itemgetter
 
 
 app = Flask(__name__)
@@ -115,37 +115,31 @@ def current_profile():
     return redirect("/users/%s" % user_id)
 
 
-@app.route('/correlation', methods=['GET'])
+@app.route('/correlation')
 def select_correlation():
     """Select users to show correlation."""
 
-    return render_template("correlation.html")
+    return redirect("/correlation/%s&%s" % (0,0))
 
 
-#   def generate():
-#         yield 'waiting 5 seconds\n'
+@app.route('/correlation/<int:userid1>&<int:userid2>')
+def display_correlation(userid1=0,userid2=0):
+    """Display correlation between selected users."""
 
-#         for i in range(1, 101):
-#             time.sleep(0.05)
+    user1 = User.query.get(userid1)
+    user2 = User.query.get(userid2)
 
-#             if i % 10 == 0:
-#                 yield '{}%\n'.format(i)
+    correlation = None
+    data_by_shared_taste = None
 
-#         yield 'done\n'
+    if user1 and user2:
+        correlation = user1.similarity(user2)
+        shared_movies = user1.shared_movies(user2)
+        data = [(Movie.query.get(movie[0]), movie[1]) for movie in shared_movies.iteritems()]
+        data_by_shared_taste = sorted(data, key=lambda data: abs(data[1][0]-data[1][1]))
 
-#     return Response(generate(), mimetype='text/plain')
-
-# @app.route('/correlationD3', methods=['POST'])
-# def correlationD3():
-#     """Show D3 correlogram of selected range of users."""
-
-#     movie_limit = int(request.form['movielimit'])
-
-#     all_users = User.query.all()
-#     users = segment_users(all_users,movie_limit)
-
-#     data = make_correlogram(users)
-#     return render_template("correlation.html", users=users, data=data, correlation=None)
+    users = User.query.all()
+    return render_template("correlation.html", users=users, user1=user1, user2=user2, data=data_by_shared_taste, correlation=correlation)
 
 
 @app.route('/correlation', methods=['POST'])
@@ -156,14 +150,20 @@ def compare_ratings():
     userid1 = request.form['userid1']
     userid2 = request.form['userid2']
 
-    user1 = User.query.get(userid1)
-    user2 = User.query.get(userid2)
+    return redirect("/correlation/%s&%s" % (userid1,userid2))
 
-    correlation = user1.similarity(user2)
 
-    users = User.query.all()
+# @app.route('/correlogram')
+# def correlationD3():
+#     """Show D3 correlogram of selected range of users."""
 
-    return render_template("correlation.html", users=users, user1=user1, user2=user2, correlation=correlation)
+#     movie_limit = int(request.form['movielimit'])
+
+#     all_users = User.query.all()
+#     users = segment_users(all_users,movie_limit)
+
+#     data = make_correlogram(users)
+#     return render_template("correlation.html", users=users, data=data, correlation=None)
 
 
 @app.route('/movies')

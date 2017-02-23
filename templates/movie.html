@@ -3,7 +3,7 @@
 
 
 <h2 class="movie-title"><a target="_blank" href="{{ movie.imdb_url }}">{{ movie.title }} </a>
-{% if data.Year %}<span class="subtitle">({{ data.Year }})</span></h2>{% endif %}
+<span class="subtitle">({{ movie.release_date.year }})</span></h2>
 
 <hr class="blur">
 <br>
