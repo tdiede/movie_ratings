@@ -12,7 +12,6 @@ from model import (User, Movie, Rating)
 import requests
 import json
 import csv
-import pandas
 
 from operator import itemgetter
 
@@ -392,8 +391,8 @@ def make_correlogram():
             subsequent_row.append(correlation_value)
         matrix.append(subsequent_row)
 
-    df = pandas.DataFrame(matrix)
-    return df.to_csv()
+    # df = pandas.DataFrame(matrix)
+    # return df.to_csv()
 
     # # to interactively save a csv file
     # def generate_csv():
